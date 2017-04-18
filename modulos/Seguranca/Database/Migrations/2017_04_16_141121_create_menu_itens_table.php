@@ -18,8 +18,8 @@ class CreateMenuItensTable extends Migration
             $table->integer('menu_itens_pai')->unsigned()->nullable();
             $table->integer('modulos_id')->unsigned();
             $table->string('nome');
-            $table->string('icone');
-            $table->integer('visivel');
+            $table->string('icone')->default('fa fa-circle-o');
+            $table->integer('visivel')->default(1);
             $table->string('rota')->nullable();
             $table->string('descricao')->nullable();
             $table->integer('ordem')->nullable();

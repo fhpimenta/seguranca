@@ -33,35 +33,36 @@ class MasterMenu
         $render = '<ul class="sidebar-menu">';
         $render .= '<li class="header">MENU</li>';
 
-        foreach ($menu['categorias'] as $key => $categoria) {
-            if (!empty($categoria['subcategorias'])) {
+        foreach ($menu->categorias as $key => $categoria) {
+            if (!empty($categoria->subcategorias)) {
                 $render .= '<li class="treeview">';
                 $render .= '<a href="#">';
-                $render .= '<i class="'.$categoria['icone'].'"></i>';
-                $render .= '<span>'.$categoria['nome'].'</span>';
+                $render .= '<i class="'.$categoria->icone.'"></i>';
+                $render .= '<span>'.$categoria->nome.'</span>';
                 $render .= '<span class="pull-right-container">';
                 $render .= '<i class="fa fa-angle-left pull-right"></i>';
                 $render .= '</span></a>';
                 $render .= '<ul class="treeview-menu">';
 
-                foreach($categoria['subcategorias'] as $subcategoria) {
+                foreach($categoria->subcategorias as $subcategoria) {
 
-                    if (!$subcategoria['rota'] && !empty($subcategoria['itens'])) {
-                        $render .= '<li><a href="#"><i class="'.$subcategoria['icone'].'"></i> '.$subcategoria['nome'];
+                    if (!$subcategoria->rota && !empty($subcategoria->itens)) {
+                        $render .= '<li><a href="#"><i class="'.$subcategoria->icone.'"></i> '.$subcategoria->nome;
                         $render .= '<span class="pull-right-container">';
                         $render .= '<i class="fa fa-angle-left pull-right"></i>';
                         $render .= '</span></a>';
 
                         $render .= '<ul class="treeview-menu">';
-                        foreach($subcategoria['itens'] as $key => $item) {
-                            $render .= '<li><a href="'.route($item['rota']).'"><i class="'.$item['icone'].'"></i> '.$item['nome'].'</a></li>';
+
+                        foreach($subcategoria->itens as $key => $item) {
+                            $render .= '<li><a href="'.route($item->rota).'"><i class="'.$item->icone.'"></i> '.$item->nome.'</a></li>';
                         }
 
                         $render .= "</ul></li>";
                         continue;
                     }
 
-                    $render .= '<li><a href="'.route($subcategoria['rota']).'"><i class="'.$subcategoria['icone'].'"></i> '.$subcategoria['nome'].'</a></li>';
+                    $render .= '<li><a href="'.route($subcategoria->rota).'"><i class="'.$subcategoria->icone.'"></i> '.$subcategoria->nome.'</a></li>';
                 }
 
                 $render .= "</ul></li>";

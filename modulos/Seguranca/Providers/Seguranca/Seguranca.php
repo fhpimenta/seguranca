@@ -3,10 +3,12 @@
 namespace Modulos\Seguranca\Providers\Seguranca;
 
 use Illuminate\Contracts\Foundation\Application;
+use Modulos\Seguranca\Models\MenuItem;
 use Modulos\Seguranca\Providers\Seguranca\Contracts\Seguranca as SegurancaContract;
 use Cache;
 use DB;
 use Modulos\Seguranca\Providers\Seguranca\Exceptions\ForbiddenException;
+use Modulos\Seguranca\Repositories\MenuItemRepository;
 
 class Seguranca implements SegurancaContract
 {
@@ -137,78 +139,51 @@ class Seguranca implements SegurancaContract
             }
         }
 
+        $menuItemRepository = new MenuItemRepository();
+
         $menus = [];
 
         foreach ($modulos as $modulo) {
-            $tree = [];
-            $tree['categorias'] = [];
+            $tree = new \stdClass();
+            $tree->categorias = [];
 
-            $categorias = DB::table('menu_itens')
-                            ->where('modulos_id', '=', $modulo->id)
-                            ->where('visivel', '=', 1)
-                            ->whereNull('menu_itens_pai')
-                            ->orderBy('ordem', 'asc')
-                            ->get();
+            $categorias = $menuItemRepository->getCategorias($modulo->id);
 
-            if ($categorias->count()) {
-                foreach ($categorias as $categoria) {
-                   $categoriaArr = [
-                       'nome' => $categoria->nome,
-                       'icone' => $categoria->icone,
-                       'ordem' => $categoria->ordem,
-                       'subcategorias' => []
-                   ];
+            foreach ($categorias as $categoria) {
+                // busca as subcategorias
+                $subcategorias = $menuItemRepository->getItensFilhos($modulo->id, $categoria->id);
 
-                    // busca as subcategorias
-                    $subcategorias = DB::table('menu_itens')
-                                        ->where('modulos_id', '=', $modulo->id)
-                                        ->where('menu_itens_pai', '=', $categoria->id)
-                                        ->where('visivel', '=', 1)
-                                        ->orderBy('ordem', 'asc')
-                                        ->get();
+                for ($i = 0; $i < $subcategorias->count(); $i++) {
 
-                    foreach ($subcategorias as $subcategoria) {
+                    if($subcategorias[$i]->rota && !$this->haspermission($subcategorias[$i]->rota)) {
+                        unset($subcategorias[$i]);
+                        continue;
+                    }
 
-                        $subcategoriaArr = [
-                            'nome' => $subcategoria->nome,
-                            'icone' => $subcategoria->icone,
-                            'ordem' => $subcategoria->ordem,
-                            'rota' => $subcategoria->rota,
-                            'items' => []
-                        ];
+                    // caso o item seja uma subcategoria, busca os filhos
+                    if (!$subcategorias[$i]->rota) {
+                        // busca os items da subcategoria
+                        $itens = $menuItemRepository->getItensFilhos($modulo->id, $subcategorias[$i]->id);
 
-                        if($subcategoria->rota && !$this->haspermission($subcategoria->rota)) {
-                            continue;
-                        }
+                        for ($j = 0; $j < $itens->count(); $j++) {
 
-                        if (!$subcategoria->rota) {
-                            // busca os items da subcategoria
-                            $itens = DB::table('menu_itens')
-                                ->where('modulos_id', '=', $modulo->id)
-                                ->where('menu_itens_pai', '=', $subcategoria->id)
-                                ->where('visivel', '=', 1)
-                                ->orderBy('ordem', 'asc')
-                                ->get();
-
-                            foreach ($itens as $item) {
-
-                                if ($this->haspermission($item->rota)) {
-                                    $itemArr = [
-                                        'nome' => $item->nome,
-                                        'icone' => $item->icone,
-                                        'ordem' => $item->ordem,
-                                        'rota' => $item->rota
-                                    ];
-
-                                    $subcategoriaArr['itens'][] = $itemArr;
-                                }
+                            if (!$this->haspermission($itens[$j]->rota)) {
+                                unset($itens[$j]);
                             }
                         }
 
-                        $categoriaArr['subcategorias'][] = $subcategoriaArr;
-                    }
+                        if ($itens->count()) {
+                            $subcategorias[$i]->itens = $itens;
+                            continue;
+                        }
 
-                    $tree['categorias'][] = $categoriaArr;
+                        unset($subcategorias[$i]);
+                    }
+                }
+
+                if ($subcategorias->count()) {
+                    $categoria->subcategorias = $subcategorias;
+                    $tree->categorias[] = $categoria;
                 }
             }
 

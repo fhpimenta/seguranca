@@ -28,8 +28,8 @@ class ModulosServiceProvider extends ServiceProvider
                 $this->loadViewsFrom(__DIR__.'/'.$modulo.'/Views', $modulo);
             }
 
-            if (is_dir(__DIR__.'/'.$modulo.'/Database/migrations')) {
-                $this->loadMigrationsFrom(__DIR__.'/'.$modulo.'/Database/migrations');
+            if (is_dir(__DIR__.'/'.$modulo.'/Database/Migrations')) {
+                $this->loadMigrationsFrom(__DIR__.'/'.$modulo.'/Database/Migrations');
             }
         }
     }
