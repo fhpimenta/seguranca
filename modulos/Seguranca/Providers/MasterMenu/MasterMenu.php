@@ -33,10 +33,9 @@ class MasterMenu
         $render = '<ul class="sidebar-menu">';
         $render .= '<li class="header">MENU</li>';
 
-        $i = 1;
         foreach ($menu['categorias'] as $key => $categoria) {
             if (!empty($categoria['subcategorias'])) {
-                $render .= '<li class="active treeview">';
+                $render .= '<li class="treeview">';
                 $render .= '<a href="#">';
                 $render .= '<i class="'.$categoria['icone'].'"></i>';
                 $render .= '<span>'.$categoria['nome'].'</span>';
@@ -67,8 +66,6 @@ class MasterMenu
 
                 $render .= "</ul></li>";
             }
-
-            $i++;
         }
 
         $render .= "</ul>";
