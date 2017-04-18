@@ -8,16 +8,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/', '\Modulos\Seguranca\Http\Controllers\SelecionaModuloController@index')->name('index');
 
     Route::group(['prefix' => 'seguranca'], function () {
-       Route::get('/', function () {
-           return view('Seguranca::dashboard.index');
-       })->name('seguranca.index');
 
-        Route::get('/show', function () {
-            return "<h1>Pagina show do modulo Seguranca</h1>";
-        })->name('seguranca.show');
+       Route::get('/', '\Modulos\Seguranca\Http\Controllers\DashboardController@index')->name('seguranca.dashboard.index');
 
-        Route::get('/modulos/', function () {
-            return "<h1>Pagina show do modulo Seguranca</h1>";
-        })->name('seguranca.modulos.index');
+        Route::group(['prefix' => 'modulos'], function () {
+
+            Route::get('/', '\Modulos\Seguranca\Http\Controllers\ModulosController@index')->name('seguranca.modulos.index');
+        });
     });
 });

@@ -35,42 +35,83 @@ class MasterMenu
 
         foreach ($menu->categorias as $key => $categoria) {
             if (!empty($categoria->subcategorias)) {
-                $render .= '<li class="treeview">';
-                $render .= '<a href="#">';
-                $render .= '<i class="'.$categoria->icone.'"></i>';
-                $render .= '<span>'.$categoria->nome.'</span>';
-                $render .= '<span class="pull-right-container">';
-                $render .= '<i class="fa fa-angle-left pull-right"></i>';
-                $render .= '</span></a>';
-                $render .= '<ul class="treeview-menu">';
+                $categoriaActiveHtml = '<li class="treeview">';
+                $categoriaHtml = '<a href="#">';
+                $categoriaHtml .= '<i class="'.$categoria->icone.'"></i>';
+                $categoriaHtml .= '<span>'.$categoria->nome.'</span>';
+                $categoriaHtml .= '<span class="pull-right-container">';
+                $categoriaHtml .= '<i class="fa fa-angle-left pull-right"></i>';
+                $categoriaHtml .= '</span></a>';
+                $categoriaHtml .= '<ul class="treeview-menu">';
 
                 foreach($categoria->subcategorias as $subcategoria) {
+                    $subcategoriaHtml = '';
 
                     if (!$subcategoria->rota && !empty($subcategoria->itens)) {
-                        $render .= '<li><a href="#"><i class="'.$subcategoria->icone.'"></i> '.$subcategoria->nome;
-                        $render .= '<span class="pull-right-container">';
-                        $render .= '<i class="fa fa-angle-left pull-right"></i>';
-                        $render .= '</span></a>';
+                        $subcategoriaActiveHtml = '<li><a href="#"><i class="'.$subcategoria->icone.'"></i> '.$subcategoria->nome;
+                        $subcategoriaHtml .= '<span class="pull-right-container">';
+                        $subcategoriaHtml .= '<i class="fa fa-angle-left pull-right"></i>';
+                        $subcategoriaHtml .= '</span></a>';
 
-                        $render .= '<ul class="treeview-menu">';
+                        $subcategoriaHtml .= '<ul class="treeview-menu">';
 
+                        $itensHtml = '';
                         foreach($subcategoria->itens as $key => $item) {
-                            $render .= '<li><a href="'.route($item->rota).'"><i class="'.$item->icone.'"></i> '.$item->nome.'</a></li>';
+                            $itensHtml .= '<li';
+                            if ($this->isActive($routeName, $item->rota)) {
+                                $itensHtml .= ' class="active"';
+
+                                // Active na subcategoria
+                                $subcategoriaActiveHtml = '<li class="active"><a href="#"><i class="'.$subcategoria->icone.'"></i> '.$subcategoria->nome;
+
+                                // Active na categoria
+                                $categoriaActiveHtml = '<li class="treeview active">';
+                            }
+                            $itensHtml .= '>';
+                            $itensHtml .= '<a href="'.route($item->rota).'"><i class="'.$item->icone.'"></i> '.$item->nome.'</a></li>';
                         }
 
-                        $render .= "</ul></li>";
+                        $subcategoriaHtml .= $itensHtml;
+                        $subcategoriaHtml .= "</ul></li>";
+
+                        $categoriaHtml .= $subcategoriaActiveHtml;
+                        $categoriaHtml .= $subcategoriaHtml;
                         continue;
                     }
 
-                    $render .= '<li><a href="'.route($subcategoria->rota).'"><i class="'.$subcategoria->icone.'"></i> '.$subcategoria->nome.'</a></li>';
+                    $subcategoriaHtml .= '<li';
+                    if ($this->isActive($routeName, $subcategoria->rota)) {
+                        $subcategoriaHtml .= ' class="active"';
+                        $categoriaActiveHtml = '<li class="treeview active">';
+                    }
+                    $subcategoriaHtml .= '>';
+                    $subcategoriaHtml .= '<a href="'.route($subcategoria->rota).'"><i class="'.$subcategoria->icone.'"></i> '.$subcategoria->nome.'</a></li>';
+
+                    $categoriaHtml .= $subcategoriaHtml;
                 }
 
-                $render .= "</ul></li>";
+                $categoriaHtml .= "</ul></li>";
+
+                $render .= $categoriaActiveHtml;
+                $render .= $categoriaHtml;
             }
+
         }
 
         $render .= "</ul>";
 
         return $render;
+    }
+
+    private function isActive($rota, $permissao)
+    {
+        $rota = explode('.', $rota, 2);
+        $permissao = explode('.', $permissao, 2);
+
+        if ($rota == $permissao) {
+            return true;
+        }
+
+        return false;
     }
 }
