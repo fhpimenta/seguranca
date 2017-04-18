@@ -15,5 +15,9 @@ Route::group(['middleware' => 'auth'], function () {
 
             Route::get('/', '\Modulos\Seguranca\Http\Controllers\ModulosController@index')->name('seguranca.modulos.index');
         });
+
+        Route::group(['prefix' => 'itens'], function () {
+            Route::get('/', '\Modulos\Seguranca\Http\Controllers\ModulosController@index')->name('seguranca.itens.index');
+        });
     });
 });
