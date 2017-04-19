@@ -6,7 +6,6 @@ use Route;
 
 class ModulosServiceProvider extends ServiceProvider
 {
-
     public function boot()
     {
         $modulos = config('modulos.modulos');
@@ -18,7 +17,7 @@ class ModulosServiceProvider extends ServiceProvider
                 Route::group([
                     'middleware' => 'web',
                     'namespace' => $modulo,
-                ], function ($router) use($modulo) {
+                ], function ($router) use ($modulo) {
                     require __DIR__.'/'.$modulo.'/routes.php';
                 });
             }

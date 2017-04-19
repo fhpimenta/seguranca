@@ -14,7 +14,7 @@ class Tree
     public function __construct()
     {
         $this->nodes = 0;
-        $this->root = new Node(null, false);
+        $this->root = null;
     }
 
     /**
@@ -23,12 +23,13 @@ class Tree
      */
     public function addLeaf(Node $leaf)
     {
-        if($this->root == null){
+        if ($this->root == null) {
             throw new \ErrorException("Cannot add leaf node as root node of tree");
         }
 
         $leaf->setAsLeaf();
         $this->root->addChild($leaf);
+        $this->nodes++;
     }
 
     /**
@@ -36,7 +37,7 @@ class Tree
      */
     public function addValue(Node $node)
     {
-        if($this->root == null){
+        if ($this->root == null) {
             $this->root = $node;
             $this->nodes++;
             return;
@@ -52,10 +53,10 @@ class Tree
      */
     public function addTree(Tree $tree)
     {
-        if($tree->getRoot()){
+        if ($tree->getRoot()) {
             $root = $tree->getRoot();
             $this->addValue($root);
-            $this->nodes += $tree->getNodes();
+            $this->nodes += $tree->getNodes() - 1;
             return;
         }
 

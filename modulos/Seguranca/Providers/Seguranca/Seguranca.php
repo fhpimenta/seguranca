@@ -2,6 +2,9 @@
 
 namespace Modulos\Seguranca\Providers\Seguranca;
 
+use Harpia\Menu\MenuTree;
+use Harpia\Menu\MenuItem as MenuNode;
+use Harpia\Tree\Node;
 use Illuminate\Contracts\Foundation\Application;
 use Modulos\Seguranca\Models\MenuItem;
 use Modulos\Seguranca\Providers\Seguranca\Contracts\Seguranca as SegurancaContract;
@@ -132,53 +135,45 @@ class Seguranca implements SegurancaContract
         $menus = [];
 
         foreach ($modulos as $modulo) {
-            $tree = new \stdClass();
-            $tree->categorias = [];
+            $menu = new MenuTree();
+            $menu->addValue(new Node($modulo->nome, false));
 
             $categorias = $menuItemRepository->getCategorias($modulo->id);
 
             foreach ($categorias as $categoria) {
-                // busca as subcategorias
-                $subcategorias = $menuItemRepository->getItensFilhos($modulo->id, $categoria->id);
-
-                for ($i = 0; $i < $subcategorias->count(); $i++) {
-
-                    if($subcategorias[$i]->rota && !$this->haspermission($subcategorias[$i]->rota)) {
-                        unset($subcategorias[$i]);
-                        continue;
-                    }
-
-                    // caso o item seja uma subcategoria, busca os filhos
-                    if (!$subcategorias[$i]->rota) {
-                        // busca os items da subcategoria
-                        $itens = $menuItemRepository->getItensFilhos($modulo->id, $subcategorias[$i]->id);
-
-                        for ($j = 0; $j < $itens->count(); $j++) {
-
-                            if (!$this->haspermission($itens[$j]->rota)) {
-                                unset($itens[$j]);
-                            }
-                        }
-
-                        if ($itens->count()) {
-                            $subcategorias[$i]->itens = $itens;
-                            continue;
-                        }
-
-                        unset($subcategorias[$i]);
-                    }
-                }
-
-                if ($subcategorias->count()) {
-                    $categoria->subcategorias = $subcategorias;
-                    $tree->categorias[] = $categoria;
-                }
+                $menu->addTree($this->makeCategoriaTree($modulo->id, $categoria->id));
             }
 
-            $menus[$modulo->slug] = $tree;
+            $menus[] = $menu;
         }
 
         Cache::forever('MENU_'.$user->id, $menus);
     }
 
+    public function makeCategoriaTree($moduloId, $categoriaId)
+    {
+        $menuItemRepository = new MenuItemRepository();
+        $categoriaTree = new MenuTree();
+
+        // Categoria eh a raiz da subarvore atual
+        $categoria = $menuItemRepository->find($categoriaId);
+        $categoriaTree->addValue(new MenuNode($categoria->nome, false));
+
+        $itensFilhos = $menuItemRepository->getItensFilhos($moduloId, $categoriaId);
+
+        foreach ($itensFilhos as $itensFilho) {
+
+            // Se é uma subcategoria, monta recursivamente a arvore
+            if ($menuItemRepository->isSubCategoria($itensFilho->id)) {
+                $categoriaTree->addTree($this->makeCategoriaTree($moduloId, $itensFilho->id));
+            }
+
+            // Se for um item final, adiciona a arvore
+            if ($menuItemRepository->isItem($itensFilho->id) && $this->haspermission($itensFilho->rota)) {
+                $categoriaTree->addValue(new MenuNode($itensFilho->nome));
+            }
+        }
+
+        return $categoriaTree;
+    }
 }

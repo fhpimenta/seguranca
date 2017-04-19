@@ -5,6 +5,7 @@ namespace Harpia\Tree;
 class Node
 {
     protected $childs;
+
     protected $father;
     protected $isLeaf;
 
@@ -23,7 +24,7 @@ class Node
      */
     public function addChild(Node $node)
     {
-        if($this->isLeaf()){
+        if ($this->isLeaf()) {
             throw new \ErrorException("Trying add child on a leaf node");
         }
 
@@ -81,10 +82,26 @@ class Node
      */
     public function hasChildren()
     {
-        if(count($this->childs) > 0){
+        if (count($this->childs) > 0) {
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * @return int
+     */
+    public function howManyChildren()
+    {
+        return count($this->childs);
+    }
+
+    /**
+     * @return array
+     */
+    public function getChilds()
+    {
+        return $this->childs;
     }
 }

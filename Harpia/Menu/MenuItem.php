@@ -11,6 +11,5 @@ class MenuItem extends Node
      */
     public function render()
     {
-
     }
 }

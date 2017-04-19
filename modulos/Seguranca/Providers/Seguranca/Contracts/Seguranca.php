@@ -2,7 +2,6 @@
 
 namespace Modulos\Seguranca\Providers\Seguranca\Contracts;
 
-
 interface Seguranca
 {
     /**

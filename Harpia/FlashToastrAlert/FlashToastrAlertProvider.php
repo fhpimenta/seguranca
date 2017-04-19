@@ -2,7 +2,6 @@
 
 namespace Harpia\FlashToastrAlert;
 
-
 use Illuminate\Support\ServiceProvider;
 
 class FlashToastrAlertProvider extends ServiceProvider

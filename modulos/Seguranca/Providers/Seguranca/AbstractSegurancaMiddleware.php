@@ -2,7 +2,6 @@
 
 namespace Modulos\Seguranca\Providers\Seguranca;
 
-
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Foundation\Application;
 use Modulos\Seguranca\Providers\Seguranca\Exceptions\ForbiddenException;

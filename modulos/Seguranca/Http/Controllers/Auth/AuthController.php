@@ -13,7 +13,6 @@ use Cache;
 
 class AuthController extends Controller
 {
-
     use AuthenticatesUsers;
 
     protected $auth;
@@ -54,7 +53,6 @@ class AuthController extends Controller
     public function logout()
     {
         if (Auth::check()) {
-
             $user = Auth::user();
 
             Cache::forget('PERMISSOES_'.$user->id);
