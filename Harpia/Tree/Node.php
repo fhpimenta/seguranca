@@ -70,4 +70,16 @@ class Node
     {
         $this->data = $data;
     }
+
+    /**
+     * @return bool
+     */
+    public function hasChildren()
+    {
+        if(count($this->childs) > 0){
+            return true;
+        }
+
+        return false;
+    }
 }
