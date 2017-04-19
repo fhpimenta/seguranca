@@ -17,11 +17,22 @@ class Tree
         $this->root = new Node(null, false);
     }
 
+    /**
+     * @param null $data
+     * @throws \ErrorException
+     */
     public function addLeaf($data = null)
     {
+        if($this->root == null){
+            throw new \ErrorException("Cannot add leaf node as root node of tree");
+        }
+
         $this->root->addChild(new Node($data, true));
     }
 
+    /**
+     * @param null $data
+     */
     public function addValue($data = null)
     {
         if($this->root == null){
@@ -37,14 +48,20 @@ class Tree
     }
 
 
+    /**
+     * @param Tree $tree
+     */
     public function addTree(Tree $tree)
     {
         if($tree->getRoot()){
             $root = $tree->getRoot();
             $this->addValue($root);
             $this->nodes += $tree->getNodes();
-            $this->nodes--;
+            return;
         }
+
+        $this->root = $tree->getRoot();
+        $this->nodes = $tree->getNodes();
     }
 
     /**
