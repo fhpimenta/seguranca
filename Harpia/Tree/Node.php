@@ -4,11 +4,11 @@ namespace Harpia\Tree;
 
 class Node
 {
-    private $childs;
-    private $father;
-    private $isLeaf;
+    protected $childs;
+    protected $father;
+    protected $isLeaf;
 
-    private $data;
+    protected $data;
 
     public function __construct($data = null, $isLeaf = true)
     {
@@ -69,6 +69,11 @@ class Node
     public function setData($data)
     {
         $this->data = $data;
+    }
+
+    public function setAsLeaf()
+    {
+        $this->isLeaf = true;
     }
 
     /**

@@ -6,9 +6,9 @@ use Harpia\Tree\Node;
 
 class Tree
 {
-    private $root;
+    protected $root;
 
-    private $nodes;
+    protected $nodes;
 
 
     public function __construct()
@@ -18,32 +18,31 @@ class Tree
     }
 
     /**
-     * @param null $data
+     * @param \Harpia\Tree\Node $leaf
      * @throws \ErrorException
      */
-    public function addLeaf($data = null)
+    public function addLeaf(Node $leaf)
     {
         if($this->root == null){
             throw new \ErrorException("Cannot add leaf node as root node of tree");
         }
 
-        $this->root->addChild(new Node($data, true));
+        $leaf->setAsLeaf();
+        $this->root->addChild($leaf);
     }
 
     /**
-     * @param null $data
+     * @param \Harpia\Tree\Node $node
      */
-    public function addValue($data = null)
+    public function addValue(Node $node)
     {
         if($this->root == null){
-            $node = new Node($data, false);
-
             $this->root = $node;
             $this->nodes++;
             return;
         }
 
-        $this->root->addChild(new Node($data));
+        $this->root->addChild($node);
         $this->nodes++;
     }
 

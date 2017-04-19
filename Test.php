@@ -2,29 +2,10 @@
 
 require_once 'vendor/autoload.php';
 
-use Harpia\Tree\Tree;
+use Harpia\Menu\MenuTree;
 
-$tree = new Tree();
-$tree->addValue('Acadêmico');
-$tree->addLeaf('Relatórios');
-$tree->addLeaf('Documentos');
-$tree->addLeaf('Processos');
+$menu = new MenuTree();
 
-$otherTree = new Tree();
+$menu->addValue(new \Harpia\Menu\MenuItem('Acadêmico'));
 
-$cadastro = new Tree();
-
-$cadastro->addLeaf('Educação');
-$cadastro->addLeaf('Pessoas');
-
-$institucional = new Tree();
-
-$institucional->addLeaf('Polos');
-$institucional->addLeaf('Centros');
-$institucional->addLeaf('Departamentos');
-
-$cadastro->addTree($institucional);
-
-$tree->addTree($cadastro);
-
-echo '<pre>' . var_export($tree, true) . '</pre>';
+echo '<pre>' . var_export($menu, true) . '</pre>';
