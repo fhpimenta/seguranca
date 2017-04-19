@@ -28,19 +28,32 @@ class SegurancaSeeder extends Seeder
             'nome' => 'Administrador'
         ]);
 
+        $arrPermissoes = [];
+
         // Criar permissao index do modulo Seguranca
-        $permissaoIndex = Permissao::create([
+        $permissao = Permissao::create([
             'nome' => 'index',
-            'rota' => 'seguranca.index'
+            'rota' => 'seguranca.dashboard.index'
         ]);
 
-        $permissaoModulosIndex = Permissao::create([
+        $arrPermissoes[] = $permissao->id;
+
+        $permissao = Permissao::create([
             'nome' => 'index',
             'rota' => 'seguranca.modulos.index'
         ]);
 
+        $arrPermissoes[] = $permissao->id;
+
+        $permissao = Permissao::create([
+            'nome' => 'index',
+            'rota' => 'seguranca.itens.index'
+        ]);
+
+        $arrPermissoes[] = $permissao->id;
+
         // Atirbuir permissao index ao perfil de Administrador
-        $perfil->permissoes()->attach([$permissaoIndex->id, $permissaoModulosIndex->id]);
+        $perfil->permissoes()->attach($arrPermissoes);
 
         // Atribuir perfil de Administrador ao usuario criado
         $perfil->users()->attach(1);
@@ -61,7 +74,7 @@ class SegurancaSeeder extends Seeder
             'menu_itens_pai' => $dashboard->id,
             'nome' => 'Inicio',
             'icone' => 'fa fa-home',
-            'rota' => 'seguranca.index',
+            'rota' => 'seguranca.dashboard.index',
             'visivel' => 1
         ]);
 
@@ -79,18 +92,31 @@ class SegurancaSeeder extends Seeder
             'menu_itens_pai' => $cadastro->id,
             'nome' => 'Modulos',
             'icone' => 'fa fa-cubes',
-            'visivel' => 1,
-            'ordem' => 1
-        ]);
-
-        $moduloNovoItem = MenuItem::create([
-            'modulos_id' => $modulo->id,
-            'menu_itens_pai' => $moduloItem->id,
-            'nome' => 'Novo',
-            'icone' => 'fa fa-circle-o',
             'rota' => 'seguranca.modulos.index',
             'visivel' => 1,
             'ordem' => 1
         ]);
+
+        // Subcategoria Menu
+        $menu = MenuItem::create([
+            'modulos_id' => $modulo->id,
+            'menu_itens_pai' => $cadastro->id,
+            'nome' => 'Menu',
+            'icone' => 'fa fa-bars',
+            'visivel' => 1,
+            'ordem' => 2
+        ]);
+
+        // Nó da subcategoria
+        $item = MenuItem::create([
+            'modulos_id' => $modulo->id,
+            'menu_itens_pai' => $menu->id,
+            'nome' => 'Itens',
+            'icone' => 'fa fa-asterisk',
+            'rota' => 'seguranca.itens.index',
+            'visivel' => 1,
+            'ordem' => 1
+        ]);
+
     }
 }

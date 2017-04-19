@@ -9,6 +9,7 @@ use Cache;
 use DB;
 use Modulos\Seguranca\Providers\Seguranca\Exceptions\ForbiddenException;
 use Modulos\Seguranca\Repositories\MenuItemRepository;
+use Modulos\Seguranca\Repositories\ModulosRepository;
 
 class Seguranca implements SegurancaContract
 {
@@ -120,26 +121,13 @@ class Seguranca implements SegurancaContract
 
     public function makeCacheMenu()
     {
+        $menuItemRepository = new MenuItemRepository();
+        $modulosRepository = new ModulosRepository();
+
         $user = $this->getUser();
 
-        // busca as permissoes do usuario no cache
-        $permissoes = Cache::get('PERMISSOES_'.$user->id);
-
         // busca os modulos no qual o usuario tem permissao
-        $modulos = DB::table('modulos')
-                        ->join('perfis AS perf', 'perf.modulos_id', '=', 'modulos.id')
-                        ->join('perfis_has_users AS phu', 'phu.perfis_id', '=', 'perf.id')
-                        ->select('modulos.*')
-                        ->where('phu.users_id', '=', $user->id)
-                        ->get();
-
-        for ($i = 0; $i < $modulos->count(); $i++) {
-            if (!in_array($modulos[$i]->slug.'.index', $permissoes)) {
-                unset($modulos[$i]);
-            }
-        }
-
-        $menuItemRepository = new MenuItemRepository();
+        $modulos = $modulosRepository->getByUser($user->id);
 
         $menus = [];
 
