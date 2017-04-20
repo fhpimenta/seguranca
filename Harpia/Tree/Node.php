@@ -10,9 +10,11 @@ class Node
     protected $isLeaf;
 
     protected $data;
+    protected $name;
 
-    public function __construct($data = null, $isLeaf = true)
+    public function __construct($name = '', $data = null, $isLeaf = true)
     {
+        $this->name = $name;
         $this->data = $data;
         $this->childs = [];
         $this->isLeaf = $isLeaf;
@@ -46,6 +48,22 @@ class Node
     public function getFather()
     {
         return $this->father;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**

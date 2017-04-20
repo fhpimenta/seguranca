@@ -19,7 +19,7 @@ class ModulosRepository
         $permissoes = Cache::get('PERMISSOES_'.$userId);
 
         for ($i = 0; $i < $modulos->count(); $i++) {
-            if (!in_array($modulos[$i]->slug.'.dashboard.index', $permissoes)) {
+            if (!in_array($modulos[$i]->slug.'.index.index', $permissoes)) {
                 unset($modulos[$i]);
             }
         }

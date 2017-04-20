@@ -33,7 +33,7 @@ class SegurancaSeeder extends Seeder
         // Criar permissao index do modulo Seguranca
         $permissao = Permissao::create([
             'nome' => 'index',
-            'rota' => 'seguranca.dashboard.index'
+            'rota' => 'seguranca.index.index'
         ]);
 
         $arrPermissoes[] = $permissao->id;
@@ -74,7 +74,7 @@ class SegurancaSeeder extends Seeder
             'menu_itens_pai' => $dashboard->id,
             'nome' => 'Inicio',
             'icone' => 'fa fa-home',
-            'rota' => 'seguranca.dashboard.index',
+            'rota' => 'seguranca.index.index',
             'visivel' => 1
         ]);
 

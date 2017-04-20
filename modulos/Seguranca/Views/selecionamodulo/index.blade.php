@@ -24,7 +24,7 @@
                                                     <div class="icon">
                                                         <i class="{{$modulo->icone}}"></i>
                                                     </div>
-                                                    <a href="{{ route($modulo->slug.'.dashboard.index') }}" style="padding-top:15px;padding-bottom:15px" class="small-box-footer">
+                                                    <a href="{{ route($modulo->slug.'.index.index') }}" style="padding-top:15px;padding-bottom:15px" class="small-box-footer">
                                                         Acessar <i class="fa fa-arrow-circle-right"></i>
                                                     </a>
                                                 </div>

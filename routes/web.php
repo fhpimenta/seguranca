@@ -14,7 +14,3 @@
 //Route::get('/', function () {
 //    return view('welcome');
 //});
-
-Route::get('/geral/', function () {
-    return "<h1>Módulo Geral</h1>";
-})->name('geral.index');

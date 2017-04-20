@@ -136,7 +136,7 @@ class Seguranca implements SegurancaContract
 
         foreach ($modulos as $modulo) {
             $menu = new MenuTree();
-            $menu->addValue(new Node($modulo->nome, false));
+            $menu->addValue(new Node($modulo->nome, $modulo, false));
 
             $categorias = $menuItemRepository->getCategorias($modulo->id);
 
@@ -144,7 +144,7 @@ class Seguranca implements SegurancaContract
                 $menu->addTree($this->makeCategoriaTree($modulo->id, $categoria->id));
             }
 
-            $menus[] = $menu;
+            $menus[$modulo->slug] = $menu;
         }
 
         Cache::forever('MENU_'.$user->id, $menus);
@@ -157,7 +157,7 @@ class Seguranca implements SegurancaContract
 
         // Categoria eh a raiz da subarvore atual
         $categoria = $menuItemRepository->find($categoriaId);
-        $categoriaTree->addValue(new MenuNode($categoria->nome, false));
+        $categoriaTree->addValue(new MenuNode($categoria->nome, $categoria, false));
 
         $itensFilhos = $menuItemRepository->getItensFilhos($moduloId, $categoriaId);
 
@@ -170,7 +170,7 @@ class Seguranca implements SegurancaContract
 
             // Se for um item final, adiciona a arvore
             if ($menuItemRepository->isItem($itensFilho->id) && $this->haspermission($itensFilho->rota)) {
-                $categoriaTree->addValue(new MenuNode($itensFilho->nome));
+                $categoriaTree->addValue(new MenuNode($itensFilho->nome, $itensFilho));
             }
         }
 
