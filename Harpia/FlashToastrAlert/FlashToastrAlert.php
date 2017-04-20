@@ -2,7 +2,6 @@
 
 namespace Harpia\FlashToastrAlert;
 
-
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Session\SessionManager;
 

@@ -117,6 +117,5 @@ class SegurancaSeeder extends Seeder
             'visivel' => 1,
             'ordem' => 1
         ]);
-
     }
 }

@@ -44,7 +44,7 @@ class MasterMenu
                 $categoriaHtml .= '</span></a>';
                 $categoriaHtml .= '<ul class="treeview-menu">';
 
-                foreach($categoria->subcategorias as $subcategoria) {
+                foreach ($categoria->subcategorias as $subcategoria) {
                     $subcategoriaHtml = '';
 
                     if (!$subcategoria->rota && !empty($subcategoria->itens)) {
@@ -56,7 +56,7 @@ class MasterMenu
                         $subcategoriaHtml .= '<ul class="treeview-menu">';
 
                         $itensHtml = '';
-                        foreach($subcategoria->itens as $key => $item) {
+                        foreach ($subcategoria->itens as $key => $item) {
                             $itensHtml .= '<li';
                             if ($this->isActive($routeName, $item->rota)) {
                                 $itensHtml .= ' class="active"';
@@ -95,7 +95,6 @@ class MasterMenu
                 $render .= $categoriaActiveHtml;
                 $render .= $categoriaHtml;
             }
-
         }
 
         $render .= "</ul>";

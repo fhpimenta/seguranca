@@ -8,11 +8,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/', '\Modulos\Seguranca\Http\Controllers\SelecionaModuloController@index')->name('index');
 
     Route::group(['prefix' => 'seguranca'], function () {
-
-       Route::get('/', '\Modulos\Seguranca\Http\Controllers\DashboardController@index')->name('seguranca.dashboard.index');
+        Route::get('/', '\Modulos\Seguranca\Http\Controllers\DashboardController@index')->name('seguranca.dashboard.index');
 
         Route::group(['prefix' => 'modulos'], function () {
-
             Route::get('/', '\Modulos\Seguranca\Http\Controllers\ModulosController@index')->name('seguranca.modulos.index');
         });
 
